@@ -1,8 +1,5 @@
 server:
   port: 8080
-#  tomcat:
-#    access-log-enabled: true
-#    access-log-pattern: "%h %l %u %t \"%r\" %s %b"
 
 spring:
   datasource:
@@ -10,9 +7,17 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  h2:
+    # Obviously not for "real production"
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true # Sets the "JDBC URL" field in the browser actual DB
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
 
 logging:
   level:
