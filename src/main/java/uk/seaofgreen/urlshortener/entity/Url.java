@@ -19,9 +19,9 @@ public class Url {
 
     public Url() {}
 
-    public Url(String alias, String fullUrl) {
-        this.alias = alias;
+    public Url(String fullUrl, String alias) {
         this.fullUrl = fullUrl;
+        this.alias = alias;
     }
 
     public Long getId() { return id; }
@@ -42,7 +42,7 @@ public class Url {
 
     @Override
     public int hashCode() {
-        return Objects.hash(alias, fullUrl);
+        return Objects.hash(fullUrl, alias);
     }
 
     @Override

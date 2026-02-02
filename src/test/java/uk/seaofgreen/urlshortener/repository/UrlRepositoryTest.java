@@ -21,9 +21,9 @@ class UrlRepositoryTest {
     private UrlRepository urlRepository;
 
     @Test
-    void shouldFindUrlByAlias() {
+    void findByAlias() {
         // Given
-        Url url = new Url(ALIAS, FULL_URL);
+        Url url = new Url(FULL_URL, ALIAS);
         urlRepository.save(url);
 
         // When
@@ -32,14 +32,5 @@ class UrlRepositoryTest {
         // Then
         assertThat(found.isPresent(), is(true));
         assertThat(found.get().getFullUrl(), is(FULL_URL));
-    }
-
-    @Test
-    void shouldReturnFalseWhenAliasDoesNotExist() {
-        // When
-        boolean exists = urlRepository.existsByAlias("nonexistent");
-
-        // Then
-        assertThat(exists, is(false));
     }
 }
