@@ -1,4 +1,4 @@
-package uk.seaofgreen.urlshortener;
+package uk.seaofgreen.urlshortener.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
