@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./ShortenUrl.module.css";
-import { API_BASE } from "../../../api.ts";
-import type { UrlEntry } from "../ManageUrls/ManageUrls.tsx";
+import { shortenUrl } from "../../api/api";
+import type { UrlEntry } from "../../api/types";
 
 type ShortenUrlProps = {
     onCreated?: (url: UrlEntry) => void;
@@ -54,38 +54,27 @@ const ShortenUrl = ({ onCreated }: ShortenUrlProps) => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/shorten`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    fullUrl,
-                    customAlias: customAlias || undefined,
-                }),
+            const data = await shortenUrl({
+                fullUrl,
+                customAlias: customAlias || undefined,
             });
 
-            if (response.status === 201) {
-                const data = await response.json();
-                setShortUrl(data.shortUrl);
+            setShortUrl(data.shortUrl);
 
-                // Build a full UrlEntry for the table
-                const aliasFromResponse =
-                    customAlias.trim() ||
-                    new URL(data.shortUrl).pathname.replace(/^\//, "");
+            // Build full UrlEntry for the table
+            const alias =
+                customAlias.trim() ||
+                new URL(data.shortUrl).pathname.replace(/^\//, "");
 
-                const entry: UrlEntry = {
-                    alias: aliasFromResponse,
-                    fullUrl,
-                    shortUrl: data.shortUrl,
-                };
+            const entry: UrlEntry = {
+                alias,
+                fullUrl,
+                shortUrl: data.shortUrl,
+            };
 
-                onCreated?.(entry);
-            } else if (response.status === 400) {
-                setError("Invalid input or alias already taken");
-            } else {
-                setError("Unexpected error from server");
-            }
-        } catch {
-            setError("Network error — could not reach server");
+            onCreated?.(entry);
+        } catch (err: any) {
+            setError(err.message || "Unexpected error");
         } finally {
             setLoading(false);
         }

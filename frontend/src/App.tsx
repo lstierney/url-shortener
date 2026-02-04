@@ -3,7 +3,7 @@ import UrlManager from "./components/UrlManager/UrlManager";
 
 const App = () => {
     return (
-        <Page>
+        <Page title="URL Shortener">
             <UrlManager />
         </Page>
     );

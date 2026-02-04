@@ -4,3 +4,10 @@
     margin: 0 auto;
     font-family: sans-serif;
 }
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #222;
+}

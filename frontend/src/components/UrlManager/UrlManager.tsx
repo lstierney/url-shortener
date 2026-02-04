@@ -1,42 +1,42 @@
 import { useEffect, useState } from "react";
 import ShortenUrl from "../ShortenUrl/ShortenUrl";
-import ManageUrls, {type UrlEntry } from "../ManageUrls/ManageUrls.tsx";
-import { API_BASE } from "../../../api.ts";
-import Card from "../Card/Card.tsx";
+import ManageUrls from "../ManageUrls/ManageUrls";
+import { listUrls, deleteUrl } from "../../api/api";
+import type { UrlEntry } from "../../api/types";
 
 const UrlManager = () => {
   const [urls, setUrls] = useState<UrlEntry[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const loadUrls = async () => {
-    const res = await fetch(`${API_BASE}/urls`);
-    const data = await res.json();
-    setUrls(data);
-  };
-
-  useEffect(() => {
-    loadUrls();
-  }, []);
-
-  const handleCreated = (newUrl: UrlEntry) => {
-    setUrls((prev) => [...prev, newUrl]);
-  };
-
-  const handleDelete = async (alias: string) => {
-    const res = await fetch(`${API_BASE}/${alias}`, { method: "DELETE" });
-    if (res.status === 204) {
-      setUrls((prev) => prev.filter((u) => u.alias !== alias));
+  const load = async () => {
+    try {
+      const data = await listUrls();
+      setUrls(data);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    load();
+  }, []);
+
+  const handleCreated = (entry: UrlEntry) => {
+    setUrls((prev) => [...prev, entry]);
+  };
+
+  const handleDelete = async (alias: string) => {
+    await deleteUrl(alias);
+    setUrls((prev) => prev.filter((u) => u.alias !== alias));
+  };
+
+  if (loading) return <div>Loading…</div>;
+
   return (
-    <>
-      <Card title="Shorten URL">
+      <>
         <ShortenUrl onCreated={handleCreated} />
-      </Card>
-      <Card title="Manage Shortened URLs">
         <ManageUrls urls={urls} onDelete={handleDelete} />
-      </Card>
-    </>
+      </>
   );
 };
 
