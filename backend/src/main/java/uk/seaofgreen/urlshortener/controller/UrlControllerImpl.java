@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UrlControllerImpl implements UrlController {
 
     private final UrlService urlService;
