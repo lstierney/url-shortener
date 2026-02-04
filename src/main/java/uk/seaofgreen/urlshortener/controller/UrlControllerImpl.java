@@ -1,6 +1,5 @@
 package uk.seaofgreen.urlshortener.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
@@ -12,11 +11,9 @@ import uk.seaofgreen.urlshortener.service.UrlService;
 import java.util.List;
 import java.util.Optional;
 
-// TODO - "better" validate incoming data
-// TODO - CAREFULLY check all of this class via API spec - tests cases for ALL scenarios
-// TODO - javadoc
 @RestController
 public class UrlControllerImpl implements UrlController {
+
     private final UrlService urlService;
 
     public UrlControllerImpl(UrlService urlService) {
@@ -25,18 +22,20 @@ public class UrlControllerImpl implements UrlController {
 
     @PostMapping("/shorten")
     @Override
-    public ResponseEntity<ShortenUrlResponse> shorten(@Valid @RequestBody ShortenUrlRequest request,
-                                                       @RequestHeader(value = "Host") String host) {
+    public ResponseEntity<ShortenUrlResponse> shorten(
+            @Valid @RequestBody ShortenUrlRequest request,
+            @RequestHeader("Host") String host) {
+
         try {
             Url url = urlService.createUrl(
-                    request.url(),
-                    Optional.ofNullable(request.alias())
+                    request.fullUrl(),
+                    Optional.ofNullable(request.customAlias())
             );
 
-            String shortUrl = "http://" + host + "/" + url.getAlias(); // TODO - https?
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ShortenUrlResponse(url.getAlias(), url.getFullUrl(), shortUrl));
+            String shortUrl = "https://" + host + "/" + url.getAlias();
 
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ShortenUrlResponse(shortUrl));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -44,12 +43,15 @@ public class UrlControllerImpl implements UrlController {
 
     @GetMapping("/{alias}")
     @Override
-    public void redirect(@PathVariable String alias, HttpServletResponse response) {
-        Url url = urlService.getUrl(alias)
-                .orElseThrow(() -> new RuntimeException("Alias not found")); // TODO - fix to correct status
+    public ResponseEntity<Void> redirect(@PathVariable String alias) {
+        var url = urlService.getUrl(alias);
+        if (url.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-        response.setStatus(HttpServletResponse.SC_FOUND);
-        response.setHeader("Location", url.getFullUrl());
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", url.get().getFullUrl())
+                .build();
     }
 
     @DeleteMapping("/{alias}")
@@ -65,23 +67,27 @@ public class UrlControllerImpl implements UrlController {
 
     @GetMapping("/urls")
     @Override
-    public List<ShortenUrlResponse> list(@RequestHeader(value = "Host") String host) {
+    public List<ShortenUrlListResponse> list(@RequestHeader("Host") String host) {
         return urlService.getAllUrls().stream()
-                .map(u -> new ShortenUrlResponse(
+                .map(u -> new ShortenUrlListResponse(
                         u.getAlias(),
                         u.getFullUrl(),
-                        "http://" + host + "/" + u.getAlias()
+                        "https://" + host + "/" + u.getAlias()
                 ))
                 .toList();
     }
 
     // DTOs
     public record ShortenUrlRequest(
-            @NotBlank String url,
-            String alias
+            @NotBlank String fullUrl,
+            String customAlias
     ) {}
 
     public record ShortenUrlResponse(
+            String shortUrl
+    ) {}
+
+    public record ShortenUrlListResponse(
             String alias,
             String fullUrl,
             String shortUrl

@@ -1,5 +1,7 @@
 package uk.seaofgreen.urlshortener.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ public class UrlServiceImpl implements UrlService {
     private static final String ALPHANUM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int RANDOM_ALIAS_LENGTH = 6;
     private final SecureRandom random = new SecureRandom();
+    private static final Logger log = LoggerFactory.getLogger(UrlServiceImpl.class);
 
     public UrlServiceImpl(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
@@ -40,18 +43,23 @@ public class UrlServiceImpl implements UrlService {
         int maxRetries = 5;
 
         try {
-            // saveAndFlush to force the DB check immediately within the try-catch block
-            return urlRepository.saveAndFlush(new Url(fullUrl, alias));
+            log.debug("Attempting to save URL '{}' with alias '{}' (attempt {})", fullUrl, alias, attempt);
+            Url saved = urlRepository.saveAndFlush(new Url(fullUrl, alias));
+            log.info("Successfully created short URL with alias '{}'", alias);
+            return saved;
+
         } catch (DataIntegrityViolationException e) {
             if (isCustom) {
-                // We stop here because the User requested a specific custom alias
+                log.warn("Custom alias '{}' is already taken — rejecting request", alias);
                 throw new IllegalArgumentException("Alias '" + alias + "' is already taken");
             }
 
             if (attempt >= maxRetries) {
+                log.error("Failed to generate a unique alias after {} attempts", maxRetries);
                 throw new RuntimeException("Could not generate unique alias after multiple attempts");
             }
-            // Self-healing: try again with a fresh random alias
+
+            log.debug("Alias '{}' collided (attempt {}). Generating a new alias…", alias, attempt);
             return saveWithRetry(fullUrl, generateRandomAlias(), false, attempt + 1);
         }
     }
