@@ -1,13 +1,10 @@
 import Page from "./components/Page/Page";
-import Card from "./components/Card/Card";
-import ShortenUrl from "./components/ShortenUrl/ShortenUrl";
+import UrlManager from "./components/UrlManager/UrlManager";
 
 const App = () => {
     return (
         <Page>
-            <Card title="Shorten URL">
-                <ShortenUrl />
-            </Card>
+            <UrlManager />
         </Page>
     );
 };

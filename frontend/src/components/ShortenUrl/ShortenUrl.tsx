@@ -1,18 +1,22 @@
 import { useState } from "react";
 import styles from "./ShortenUrl.module.css";
 import { API_BASE } from "../../../api.ts";
-import * as React from "react";
+import type { UrlEntry } from "../ManageUrls/ManageUrls.tsx";
 
-const ShortenUrl = () => {
+type ShortenUrlProps = {
+    onCreated?: (url: UrlEntry) => void;
+};
+
+const ShortenUrl = ({ onCreated }: ShortenUrlProps) => {
     const [fullUrl, setFullUrl] = useState("");
     const [customAlias, setCustomAlias] = useState("");
+
     const [loading, setLoading] = useState(false);
     const [shortUrl, setShortUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const validate = () => {
-        // Validate fullUrl
         try {
             const parsed = new URL(fullUrl);
             if (!parsed.protocol.startsWith("http")) {
@@ -22,7 +26,6 @@ const ShortenUrl = () => {
             return "Please enter a valid URL";
         }
 
-        // Validate customAlias
         if (customAlias.trim().length > 0) {
             const aliasRegex = /^[a-zA-Z0-9-_]+$/;
             if (!aliasRegex.test(customAlias)) {
@@ -63,6 +66,19 @@ const ShortenUrl = () => {
             if (response.status === 201) {
                 const data = await response.json();
                 setShortUrl(data.shortUrl);
+
+                // Build a full UrlEntry for the table
+                const aliasFromResponse =
+                    customAlias.trim() ||
+                    new URL(data.shortUrl).pathname.replace(/^\//, "");
+
+                const entry: UrlEntry = {
+                    alias: aliasFromResponse,
+                    fullUrl,
+                    shortUrl: data.shortUrl,
+                };
+
+                onCreated?.(entry);
             } else if (response.status === 400) {
                 setError("Invalid input or alias already taken");
             } else {
