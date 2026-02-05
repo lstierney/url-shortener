@@ -12,7 +12,7 @@ It should:
 - Persist the shortened URLs across restarts.
 - Expose a **decoupled web frontend** built with a modern framework (e.g., React, Next.js, Vue.js, Angular, Flask with templates). This can be lightweight form/output just to demonstrate interaction with the API. Feel free to use UI frameworks like Bootstrap, Material-UI, Tailwind CSS, GOV.UK design system, etc. to speed up development.
 - Expose a **RESTful API** to perform create/read/delete operations on URLs.  
-  → Refer to the provided [`openapi.yaml`](./openapi.yaml) for API structure and expected behaviour.
+  → Refer to the provided [`openapi.yaml`](backend/openapi.yaml) for API structure and expected behaviour.
 - Include the ability to **delete a shortened URL** via the API.
 - **Have tests**.
 - Be containerised (e.g. Docker).
@@ -26,7 +26,7 @@ It should:
 - Write tests.
 - The API should validate inputs and handle errors gracefully.
 - The Frontend should show errors from the API appropriately.
-- Use the provided [`openapi.yaml`](./openapi.yaml) as the API contract.
+- Use the provided [`openapi.yaml`](backend/openapi.yaml) as the API contract.
 - Focus on clean, maintainable code.
 - AI tools (e.g., GitHub Copilot, ChatGPT) are allowed, but please **do not** copy-paste large chunks of code. Use them as assistants, not as a replacement for your own work. We will be asking.
 
