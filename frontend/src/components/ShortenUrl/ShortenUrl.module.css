@@ -25,7 +25,15 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
+
+    display: inline-block;
+    width: auto;
+    flex: 0 0 auto;
+
+    align-self: center;
 }
+
+
 
 .button:hover {
     background: #006ae0;

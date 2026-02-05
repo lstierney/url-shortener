@@ -31,8 +31,8 @@ const ShortenUrl = ({ onCreated }: ShortenUrlProps) => {
             if (!aliasRegex.test(customAlias)) {
                 return "Alias may only contain letters, numbers, hyphens, and underscores";
             }
-            if (customAlias.length > 50) {
-                return "Alias must be 50 characters or fewer";
+            if (customAlias.length > 20) {
+                return "Alias must be 20 characters or fewer";
             }
         }
 
@@ -111,7 +111,7 @@ const ShortenUrl = ({ onCreated }: ShortenUrlProps) => {
             {error && <div className={styles.error}>{error}</div>}
             {shortUrl && (
                 <div className={styles.success}>
-                    Short URL: <a href={shortUrl}>{shortUrl}</a>
+                    Short URL Created: <a href={shortUrl}>{shortUrl}</a>
                 </div>
             )}
         </form>

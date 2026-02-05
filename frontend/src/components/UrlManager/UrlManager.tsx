@@ -3,6 +3,7 @@ import ShortenUrl from "../ShortenUrl/ShortenUrl";
 import ManageUrls from "../ManageUrls/ManageUrls";
 import { listUrls, deleteUrl } from "../../api/api";
 import type { UrlEntry } from "../../api/types";
+import Card from "../Card/Card.tsx";
 
 const UrlManager = () => {
   const [urls, setUrls] = useState<UrlEntry[]>([]);
@@ -34,8 +35,17 @@ const UrlManager = () => {
 
   return (
       <>
-        <ShortenUrl onCreated={handleCreated} />
-        <ManageUrls urls={urls} onDelete={handleDelete} />
+        <Card title="Create a short link" subtitle="Paste a URL and optionally add a custom alias" elevated>
+          <ShortenUrl onCreated={handleCreated} />
+        </Card>
+
+        <Card
+            title="Your short links"
+            variant="outlined"
+            elevated
+        >
+          <ManageUrls urls={urls} onDelete={handleDelete} />
+        </Card>
       </>
   );
 };
