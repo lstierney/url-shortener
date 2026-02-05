@@ -8,7 +8,7 @@
 		<version>3.5.10</version>
 		<relativePath/>
 	</parent>
-	<groupId>uk.seaofgreen</groupId>
+	<groupId>com.tpximpact</groupId>
 	<artifactId>url-shortener</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>url-shortener</name>
