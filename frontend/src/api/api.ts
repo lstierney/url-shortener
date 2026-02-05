@@ -21,7 +21,7 @@ export async function shortenUrl(
     }
 
     if (res.status !== 201) {
-        throw new Error("Unexpected server error");
+        throw new Error("Unexpected error");
     }
 
     return res.json();
@@ -29,7 +29,12 @@ export async function shortenUrl(
 
 export async function deleteUrl(alias: string): Promise<void> {
     const res = await fetch(`${API_BASE}/${alias}`, { method: "DELETE" });
+
+    if (res.status === 404) {
+        throw new Error("Requested URL not found");
+    }
+
     if (res.status !== 204) {
-        throw new Error("Failed to delete URL");
+        throw new Error("Unexpected error");
     }
 }
