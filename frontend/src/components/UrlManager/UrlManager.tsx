@@ -35,15 +35,10 @@ const UrlManager = () => {
 
   return (
       <>
-        <Card title="Create a short link" subtitle="Paste a URL and optionally add a custom alias" elevated>
+        <Card title="Create a short link">
           <ShortenUrl onCreated={handleCreated} />
         </Card>
-
-        <Card
-            title="Your short links"
-            variant="outlined"
-            elevated
-        >
+        <Card title="Your short links">
           <ManageUrls urls={urls} onDelete={handleDelete} />
         </Card>
       </>

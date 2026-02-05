@@ -33,7 +33,7 @@ const ManageUrls = ({ urls, onDelete }: Props) => {
                 urls.map((u) => (
                     <tr key={u.alias}>
                         <td>
-                            <a href={u.shortUrl}>{u.shortUrl}</a>
+                            <a href={u.shortUrl} target="_blank" rel="noopener noreferrer">{u.shortUrl}</a>
                         </td>
                         <td className={styles.fullUrl}>{u.fullUrl}</td>
                         <td>
