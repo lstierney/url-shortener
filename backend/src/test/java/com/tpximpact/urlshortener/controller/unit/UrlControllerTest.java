@@ -130,7 +130,7 @@ public class UrlControllerTest {
         then(urlService).should().createUrl(request.fullUrl(), Optional.of(ALIAS_1));
 
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-        assertThat(response.getBody().shortUrl(), is("https://" + HOST + "/" + ALIAS_1));
+        assertThat(response.getBody().shortUrl(), is("http://" + HOST + "/" + ALIAS_1));
     }
 
     @Test

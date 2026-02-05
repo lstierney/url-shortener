@@ -33,7 +33,7 @@ public class UrlControllerImpl implements UrlController {
                     Optional.ofNullable(request.customAlias())
             );
 
-            String shortUrl = "https://" + host + "/" + url.getAlias();
+            String shortUrl = "http://" + host + "/" + url.getAlias();
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ShortenUrlResponse(shortUrl));
@@ -73,7 +73,7 @@ public class UrlControllerImpl implements UrlController {
                 .map(u -> new ShortenUrlListResponse(
                         u.getAlias(),
                         u.getFullUrl(),
-                        "https://" + host + "/" + u.getAlias()
+                        "http://" + host + "/" + u.getAlias()
                 ))
                 .toList();
     }

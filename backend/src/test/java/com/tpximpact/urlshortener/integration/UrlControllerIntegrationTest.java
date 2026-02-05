@@ -67,7 +67,7 @@ class UrlControllerIntegrationTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(notNullValue()));
-        assertThat(response.getBody().shortUrl(), is("https://localhost:" + port + "/" + ALIAS_1));
+        assertThat(response.getBody().shortUrl(), is("http://localhost:" + port + "/" + ALIAS_1));
     }
 
     @Test

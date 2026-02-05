@@ -14,8 +14,8 @@ public final class TestDataFactory {
     public static final String ALIAS_2 = "google";
     public static final String FULL_URL_1 = "https://example.com";
     public static final String FULL_URL_2 = "https://google.com";
-    public static final String SHORT_URL_1 = "https://hostname/example";
-    public static final String SHORT_URL_2 = "https://hostname/google";
+    public static final String SHORT_URL_1 = "http://hostname/example";
+    public static final String SHORT_URL_2 = "http://hostname/google";
 
     public static Url url(String fullUrl, String alias) {
         return new Url(fullUrl, alias);
