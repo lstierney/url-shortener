@@ -1,44 +1,95 @@
-# URL Shortener Coding Task
+# URL Shortener
+A simple URL shortener service with a RESTful API and a decoupled web frontend.
 
-## Task
+Built as a coding exercise to demonstrate clean API design, persistence, testing, and containerisation.
 
-Build a simple **URL shortener** in a ** preferably JVM-based language** (e.g. Java, Kotlin).
+---
 
-It should:
+## Features
 
-- Accept a full URL and return a shortened URL.
-- A shortened URL should have a randomly generated alias.
-- Allow a user to **customise the shortened URL** if they want to (e.g. user provides `my-custom-alias` instead of a random string).
-- Persist the shortened URLs across restarts.
-- Expose a **decoupled web frontend** built with a modern framework (e.g., React, Next.js, Vue.js, Angular, Flask with templates). This can be lightweight form/output just to demonstrate interaction with the API. Feel free to use UI frameworks like Bootstrap, Material-UI, Tailwind CSS, GOV.UK design system, etc. to speed up development.
-- Expose a **RESTful API** to perform create/read/delete operations on URLs.  
-  → Refer to the provided [`openapi.yaml`](backend/openapi.yaml) for API structure and expected behaviour.
-- Include the ability to **delete a shortened URL** via the API.
-- **Have tests**.
-- Be containerised (e.g. Docker).
-- Include instructions for running locally.
+* Shorten a full URL to a randomly generated alias
+* Optional custom alias support
+* Redirect from short URL to original URL
+* Delete shortened URLs
+* Persistent storage across restarts
+* REST API defined by OpenAPI ([openapi.yaml](https://github.com/lstierney/url-shortener/blob/main/backend/openapi.yaml))
+* Lightweight decoupled React TypeScript frontend
+* Automated tests
+* Dockerised for easy local running
 
-## Rules
+---
 
-- Fork the repository and work in your fork. Do not push directly to the main repository.
-- There is no time limit, we want to see something you are proud of. We would like to understand roughly how long you spent on it though.
-- **Commit often with meaningful messages.**
-- Write tests.
-- The API should validate inputs and handle errors gracefully.
-- The Frontend should show errors from the API appropriately.
-- Use the provided [`openapi.yaml`](backend/openapi.yaml) as the API contract.
-- Focus on clean, maintainable code.
-- AI tools (e.g., GitHub Copilot, ChatGPT) are allowed, but please **do not** copy-paste large chunks of code. Use them as assistants, not as a replacement for your own work. We will be asking.
+## Tech Stack
+### Backend
+* Java 17 (Spring Boot)
+* REST API (following openapi.yaml as above)
+* Persistence via embedded database (H2)
+* JUnit, Mockito and Spring Tests for testing
 
-## Deliverables
+### Frontend
+* React (Vite)
+* Single page form-based UI
+* API error handling surfaced to the user
+* Vitest used for testing.
 
-- Working software.
-- Decoupled web frontend (using a modern framework like React, Next.js, Vue.js, Angular, or Flask with templates).
-- RESTful API matching the OpenAPI spec.
-- Tests.
-- A git commit history that shows your thought process.
-- Dockerfile.
-- README with:
-  - How to build and run locally.
-  - Example usage (frontend and API).
-  - Any notes or assumptions.
+### Infrastructure
+* Docker
+* Docker compose
+
+---
+
+## API Overview
+
+The API allows clients (including the frontend) to:
+
+* Create a shortened URL (with random or custom alias)
+* Retrieve a List of shortened URLs
+* Delete a shortened URL
+
+All endpoints, request/response models, and error cases are defined in
+[openapi.yaml](https://github.com/lstierney/url-shortener/blob/main/backend/openapi.yaml) and implemented accordingly.
+
+---
+
+## Running Locally
+### Prerequisites
+* Git
+* Docker Compose
+
+### Starting the Docker container
+```
+git clone https://github.com/lstierney/url-shortener
+cd url-shortener
+docker compose up --build
+```
+
+### Accessing the UI
+Once the Docker container has started you can access the UI at:
+[http://localhost:5173](http://localhost:5173)
+
+### Frontend Usage
+#### Creating a shortened URL
+* Enter a full URL and optionally enter a custom alias in the "Create a short link" form. If you do not enter a custom alias a random one will be created
+    * Validation Rules:
+        * Full URL must be a valid URL
+        * Custom Alias may only contain letters, numbers, hyphens, and underscores
+        * Custom Alias must be 20 characters or fewer
+        * Custom Alias must be unique
+* Submit to receive a shortened URL
+#### Deleting a shortened URL
+* Once one or more shortened URL have been created they will be shown in the "Your short links" table.
+* Use the delete button to delete
+* Click the shortened URL to navigate to the actual webpage.
+#### Errors
+* Errors will be displayed inline in the UI.
+
+## Notes
+* Alias uniqueness is enforced at the database level
+* URLs are validated before persistence
+* Data is persisted using an embedded H2 database stored on disk
+* Frontend is intentionally minimal
+* If a unique, random shortened URL cannot be created after 5 attempts (unlikely) an error is returned.
+
+## Out of Scope
+* Authentication
+
