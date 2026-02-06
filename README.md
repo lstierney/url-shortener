@@ -22,19 +22,19 @@ Built as a coding exercise to demonstrate clean API design, persistence, testing
 ## Tech Stack
 ### Backend
 * Java 17 (Spring Boot)
-* REST API (following openapi.yaml as above)
-* Persistence via embedded database (H2)
-* JUnit, Mockito and Spring Tests for testing
+* REST API (OpenAPI‑driven)
+* Embedded H2 database
+* JUnit, Mockito, Spring Boot Test
 
 ### Frontend
 * React (Vite)
-* Single page form-based UI
-* API error handling surfaced to the user
-* Vitest used for testing.
+* TypeScript
+* React Testing Library
+* Vitest
 
 ### Infrastructure
 * Docker
-* Docker compose
+* Docker Compose
 
 ---
 
@@ -43,8 +43,9 @@ Built as a coding exercise to demonstrate clean API design, persistence, testing
 The API allows clients (including the frontend) to:
 
 * Create a shortened URL (with random or custom alias)
-* Retrieve a List of shortened URLs
+* Retrieve a list of shortened URLs
 * Delete a shortened URL
+* Redirect from a short URL to the original URL
 
 All endpoints, request/response models, and error cases are defined in
 [openapi.yaml](https://github.com/lstierney/url-shortener/blob/main/backend/openapi.yaml) and implemented accordingly.
@@ -57,13 +58,14 @@ All endpoints, request/response models, and error cases are defined in
 * Docker Compose
 
 ### Starting the Docker container
+
 ```
 git clone https://github.com/lstierney/url-shortener
 cd url-shortener
 docker compose up --build
 ```
 
-### Accessing the UI
+## Accessing the UI
 Once the Docker container has started you can access the UI at:
 [http://localhost:5173](http://localhost:5173)
 
@@ -83,13 +85,54 @@ Once the Docker container has started you can access the UI at:
 #### Errors
 * Errors will be displayed inline in the UI.
 
+---
+
+## Testing Locally
+Backend and frontend tests run independently, so each part of the system can be tested without starting the full stack.
+
+### Backend
+#### Prerequisites
+* JDK 17 or newer
+* Maven 3 or newer
+
+#### Running
+
+```
+cd backend
+mvn clean test
+```
+
+### Frontend
+#### Prerequisites
+* Node.js 24.13.0 (tested)
+* npm 11.6.2 (tested)
+
+Note: Other recent Node versions may work, but the above versions were used during development and testing.
+
+#### Running
+
+```
+cd frontend
+npm install
+npm run test
+```
+---
+
 ## Notes
 * Alias uniqueness is enforced at the database level
 * URLs are validated before persistence
-* Data is persisted using an embedded H2 database stored on disk
+* Data is persisted using an embedded H2 database stored on disk (in memory for testing)
 * Frontend is intentionally minimal
 * If a unique, random shortened URL cannot be created after 5 attempts (unlikely) an error is returned.
 
 ## Out of Scope
-* Authentication
+* Authentication and user accounts
+* End‑to‑end UI tests (Playwright/Selenium)
+* CI/CD pipelines or automated build/deployment workflows
+* Rate limiting or abuse protection
+* Analytics or click‑tracking for short URLs
+* Custom domain support
+* URL expiry or time‑limited links
+* Horizontal scaling or distributed storage
+* Production‑grade security hardening (HTTPS, secrets management, etc.) 
 
