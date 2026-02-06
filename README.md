@@ -12,7 +12,7 @@ Built as a coding exercise to demonstrate clean API design, persistence, testing
 * Redirect from short URL to original URL
 * Delete shortened URLs
 * Persistent storage across restarts
-* REST API defined by OpenAPI ([openapi.yaml](https://github.com/lstierney/url-shortener/blob/main/backend/openapi.yaml))
+* REST API defined by OpenAPI ([openapi.yaml](openapi.yaml))
 * Lightweight decoupled React TypeScript frontend
 * Automated tests
 * Dockerised for easy local running
@@ -48,7 +48,7 @@ The API allows clients (including the frontend) to:
 * Redirect from a short URL to the original URL
 
 All endpoints, request/response models, and error cases are defined in
-[openapi.yaml](https://github.com/lstierney/url-shortener/blob/main/backend/openapi.yaml) and implemented accordingly.
+[openapi.yaml](openapi.yaml) and implemented accordingly.
 
 ---
 
